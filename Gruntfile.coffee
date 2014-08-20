@@ -6,7 +6,7 @@ module.exports = (grunt) ->
         watch:
             scripts:
                 files: ['source/**/*.coffee']
-                tasks: ['coffee']
+                tasks: ['clean', 'coffee']
 
         coffee:
             compile:
@@ -16,11 +16,22 @@ module.exports = (grunt) ->
                 src: ['*.coffee']
                 dest: 'app/scripts'
                 ext: '.js'
-                options:
-                    sourceMap: true
+
+        copy:
+            main:
+                expand: true
+                src: ["source/**/*.coffee"]
+                dest: "app/scripts/source/"
+                filter: 'isFile'
+                flatten: true
+
+        clean:
+            main: ["app/scripts"]
 
     # Load the plugin that provides the "uglify" task.
     grunt.loadNpmTasks 'grunt-contrib-coffee'
+    grunt.loadNpmTasks 'grunt-contrib-copy'
+    grunt.loadNpmTasks 'grunt-contrib-clean'
     grunt.loadNpmTasks 'grunt-contrib-watch'
 
     # Default task(s).
