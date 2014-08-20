@@ -22,7 +22,8 @@
     "angularfire": "~0.8.0",
     "angular": "1.2.22",
     "underscore": "~1.6.0",
-    "bootstrap": "~3.2.0"
+    "bootstrap": "~3.2.0",
+    "angular-cookies": "~1.2.22"
   },
   "resolutions": {
     "angular": "1.2.21"

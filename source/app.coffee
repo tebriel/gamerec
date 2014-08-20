@@ -1,7 +1,7 @@
-app = angular.module 'gamerec', ['firebase']
+app = angular.module 'gamerec', ['firebase', 'ngCookies']
 
 class UserSvc
-    constructor: (@$log, @$firebase, @$firebaseSimpleLogin) ->
+    constructor: (@$q, @$log, @$cookies, @$firebase, @$firebaseSimpleLogin) ->
         @fireRef = new Firebase "https://gamerec.firebaseio.com/users"
         @fireSync = @$firebase @fireRef
         @authClient = @$firebaseSimpleLogin @fireRef
@@ -9,36 +9,43 @@ class UserSvc
 
         return
 
+    hasLoginId: =>
+        return @$cookies.loginId?
+
     loginSuccess: (user) =>
         @$log.log "Logged in as: #{user.uid}"
         @fireSync.$set user.uid, user
-        #@$scope.user = user
+        @$cookies.loginId = user.uid
 
         return user
 
     loginFailure: (error) =>
         @$log.log "Login failed: #{error}"
-        # @$scope.user = null
 
         return
 
-
     login: =>
-        promise = @authClient
-            .$login "facebook"
-            .then @loginSuccess, @loginFailure
+        if @hasLoginId()
+            ref = new Firebase "https://gamerec.firebaseio.com/users/#{@$cookies.loginId}"
+            promise = @$firebase(ref).$asObject(@$cookies.loginId).$$conf.promise
+        else
+            promise = @authClient
+                .$login "facebook"
+                .then @loginSuccess, @loginFailure
 
         return promise
 
     logout: =>
         @authClient.$logout()
         @user = null
+        delete @$cookies['loginId']
 
         return
 
 class LoginCtrl
     constructor: (@$scope, @userSvc) ->
         @bindScope()
+        @login() if @userSvc.hasLoginId()
 
         return
 
@@ -72,8 +79,8 @@ class NewGameCtrl
 
         return
 
-UserSvcFactory = ($log, $firebase, $firebaseSimpleLogin) ->
-    return new UserSvc $log, $firebase, $firebaseSimpleLogin
+UserSvcFactory = ($q, $log, $cookies, $firebase, $firebaseSimpleLogin) ->
+    return new UserSvc $q, $log, $cookies, $firebase, $firebaseSimpleLogin
 
 app.controller "newGameCtrl", [
     "$scope",
@@ -89,7 +96,9 @@ app.controller "loginCtrl", [
 ]
 
 app.factory "userSvc", [
+    "$q",
     "$log",
+    "$cookies",
     "$firebase",
     "$firebaseSimpleLogin",
     UserSvcFactory
