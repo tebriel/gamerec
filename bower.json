@@ -1,0 +1,30 @@
+{
+  "name": "gamerec",
+  "version": "0.1.0",
+  "authors": [
+    "chris@moultrie.org"
+  ],
+  "description": "Board Game Recorder",
+  "keywords": [
+    "Board",
+    "Games"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "firebase": "~1.0.19",
+    "angularfire": "~0.8.0",
+    "angular": "1.2.22",
+    "underscore": "~1.6.0",
+    "bootstrap": "~3.2.0"
+  },
+  "resolutions": {
+    "angular": "1.2.21"
+  }
+}
