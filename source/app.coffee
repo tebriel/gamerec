@@ -27,7 +27,8 @@ class UserSvc
     login: =>
         if @hasLoginId()
             ref = new Firebase "https://gamerec.firebaseio.com/users/#{@$cookies.loginId}"
-            promise = @$firebase(ref).$asObject(@$cookies.loginId).$$conf.promise
+            @user = @$firebase(ref).$asObject(@$cookies.loginId)
+            promise = @user.$$conf.promise
         else
             promise = @authClient
                 .$login "facebook"
@@ -67,15 +68,25 @@ class LoginCtrl
         @$scope.user = null
 
 class NewGameCtrl
-    constructor: (@$scope, @$log, @$firebase) ->
-        @fireRef = new Firebase "https://gamerec.firebaseio.com/gamesplayed"
-        @fireSync = @$firebase @fireRef
+    constructor: (@$scope, @$log, @$firebase, @userSvc) ->
         @$scope.saveGame = @saveGame
+        @$scope.game = {}
+        @initForm()
+        return
+
+    initForm: =>
+        if @$scope.game.datePlayed?
+            @$scope.game = datePlayed: @$scope.game.datePlayed
+        else
+            @$scope.game = datePlayed: moment().format('YYYY-MM-DD')
+
         return
 
     saveGame: (game) =>
-        @$log.log "Not Implemented!"
-        @fireSync.$set game.name, game
+        @fireRef = new Firebase "https://gamerec.firebaseio.com/gamesplayed/#{@userSvc.user.uid}"
+        @fireSync = @$firebase @fireRef
+        @fireSync.$push game
+            .then @initForm
 
         return
 
@@ -86,6 +97,7 @@ app.controller "newGameCtrl", [
     "$scope",
     "$log",
     "$firebase",
+    "userSvc",
     NewGameCtrl
 ]
 
