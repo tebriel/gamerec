@@ -1,4 +1,4 @@
-app = angular.module 'gamerec', ['firebase', 'ngCookies']
+app = angular.module 'gamerec', ['firebase', 'ngCookies', 'mgcrea.ngStrap']
 
 class UserSvc
     constructor: (@$q, @$log, @$cookies, @$firebase, @$firebaseSimpleLogin) ->
@@ -47,6 +47,9 @@ class LoginCtrl
     constructor: (@$scope, @userSvc) ->
         @bindScope()
         @login() if @userSvc.hasLoginId()
+        @$scope.userDropdown = [
+            text: "Logout", click: "logout()"
+        ]
 
         return
 

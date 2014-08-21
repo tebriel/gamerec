@@ -33,14 +33,14 @@
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav" ng-init="page='newGame'">
-            <li ng-class="{active: page=='newGame'}">
-                <a href="" ng-click="page='newGame'">
+          <ul class="nav navbar-nav" ng-init="options.page='newGame'">
+            <li ng-class="{active: options.page=='newGame'}">
+                <a href="" ng-click="options.page='newGame'">
                     New Game
                 </a>
             </li>
-            <li ng-class="{active: page=='viewGames'}">
-                <a href="" ng-click="page='viewGames'">
+            <li ng-class="{active: options.page=='viewGames'}">
+                <a href="" ng-click="options.page='viewGames'">
                     View Games
                 </a>
             </li>
@@ -53,11 +53,11 @@
           </form>
           <ul class="nav navbar-nav navbar-right">
             <li ng-if="user==null"><a href="" ng-click="login()">Login</a></li>
-            <li class="dropdown" ng-if="user!=null">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{user.displayName}} <span class="caret"></span></a>
-              <ul class="dropdown-menu" role="menu">
-                <li><a href="#" ng-click="logout()">Logout</a></li>
-              </ul>
+            <li ng-if="user!=null">
+              <a href=""
+                  data-animation="am-flip-x" bs-dropdown="userDropdown">
+                  {{user.displayName}} <span class="caret"></span>
+              </a>
             </li>
           </ul>
         </div><!-- /.navbar-collapse -->
@@ -96,13 +96,14 @@
     <script src="vendor/jquery/dist/jquery.min.js"></script>
     <script src="vendor/moment/min/moment.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="vendor/firebase/firebase.js"></script>
     <script src="vendor/firebase-simple-login/firebase-simple-login.js"></script>
 
     <script src="vendor/angular/angular.min.js"></script>
     <script src="vendor/angular-cookies/angular-cookies.min.js"></script>
     <script src="vendor/angularfire/dist/angularfire.min.js"></script>
+    <script src="vendor/angular-strap/dist/angular-strap.min.js"></script>
+    <script src="vendor/angular-strap/dist/angular-strap.tpl.min.js"></script>
     <script src="scripts/app.js"></script>
   </body>
 </html>
